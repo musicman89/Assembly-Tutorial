@@ -1,12 +1,12 @@
 ;*******************************************************************************
-;	Print Char.asm - a demonstration of writing a single character to the screen
-;						in x86 assembly
+;	Hello World.asm - The classic hello world program written in x86 assembly
+;						
 ;
 ;       Copyright (c) Davan Etelamaki
 ;
 ;	Purpose:
-;       To provide an example of using the 0x10 interrupt to write a single
-;       	character to the screen
+;       To provide an example of using the 0x10 interrupt to write a string
+;       	to the screen
 ;
 ;*******************************************************************************
 [BITS 16]						;Tell the assembler to compile the code for 16 bit execution
