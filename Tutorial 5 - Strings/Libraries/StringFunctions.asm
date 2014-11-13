@@ -202,44 +202,104 @@ string_compare:
         align   16
 ret
 
+;********************************************************************************
+;	to_lower
+;	Purpose:
+;      Make a string lower case
+;			Prototype:
+;				word to_lower(byte string_address);
+;			Algorithm: 
+;				word to_lower(byte string_address){
+;					byte buffer = string_address;
+;					while(true){
+;						if(*buffer == 0){
+;							return string_address;
+;						}
+;						char_to_lower(*buffer);
+;						buffer++
+;					}
+;				}
+;
+;	Entry:
+;       string_address in register BX
+;	Exit:
+;       string_address in register BX
+;	Uses:
+;		AX, BX
+;	Exceptions:
+;		None
+;*******************************************************************************
 to_lower:
-    pusha
-    mov bx, sp
-    mov bx, [bx + 2]
+	push bx
     .loop:
-        mov al, [bx]		;load the current byte of the string
-        cmp al, 65 			;compare the current byte to 0
-        jl .return
-         
-        cmp al, 122
-        jg .return
-        
-        call char_to_lower
+        mov ax, [bx]				;load the current byte of the string
+        test al, al 				;check for the end of the string
+        jz .return
+                 
+	    call char_to_lower
         mov [bx], al
-        add bx, 1 			;advance to the next character
+        
+		mov al, ah					;shift the byte from AH to AL
+		test al, al 				;check for the end of the string
+        jz .return
+        
+		call char_to_lower al
+        mov [bx + 1], al
+		
+        add bx, 2 					;advance to the next characters
         jmp .loop
         .return:
-    popa
+		pop bx
 ret
 
+;********************************************************************************
+;	to_upper
+;	Purpose:
+;      Make a string upper case
+;			Prototype:
+;				word to_upper(byte string_address);
+;			Algorithm: 
+;				word to_upper(byte string_address){
+;					byte buffer = string_address;
+;					while(true){
+;						if(*buffer == 0){
+;							return string_address;
+;						}
+;						char_to_upper(*buffer);
+;						buffer++
+;					}
+;				}
+;
+;	Entry:
+;       string_address in register BX
+;	Exit:
+;       string_address in register BX
+;	Uses:
+;		AX, BX
+;	Exceptions:
+;		None
+;*******************************************************************************
 to_upper:
-    pusha
-    mov bx, sp
-    mov bx, [bx + 2]
+	push bx
     .loop:
-        mov al, [bx]			;load the current byte of the string
-        cmp al, 65 				;compare the current byte to 0
-        jl .return
-         
-        cmp al, 122
-        jg .return
-        
-        call char_to_upper
+        mov ax, [bx]				;load the current byte of the string
+        test al, al 				;check for the end of the string
+        jz .return
+                 
+	    call char_to_upper
         mov [bx], al
-        add bx, 1 				;advance to the next character
+        
+		mov al, ah					;shift the byte from AH to AL
+		test al, al 				;check for the end of the string
+        jz .return
+        
+		call char_to_upper
+        mov [bx + 1], al
+
+        add bx, 2 					;advance to the next characters
         jmp .loop
         .return:
-    popa
+		pop bx
 ret
 
 StringBuffer times 255 db 0

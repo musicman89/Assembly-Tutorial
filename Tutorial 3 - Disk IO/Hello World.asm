@@ -9,20 +9,20 @@
 ;       	to the screen
 ;
 ;*******************************************************************************
-[BITS 16]						;Tell the assembler to compile the code for 16 bit execution
-[ORG 0x9000]					;Tell the assembler that our addresses start at the address 0x7c00
+[BITS 16]								;Tell the assembler to compile the code for 16 bit execution
+[ORG 0x9000]							;Tell the assembler that our addresses start at the address 0x7c00
 
 
 
-%macro Print 1 			;Define a Print Function Macro 
-	mov bx, %1 			;Set BX to the address of the first parameter
-	call print_string 	;Call the print string function
+%macro Print 1 							;Define a Print Function Macro 
+	mov bx, %1 							;Set BX to the address of the first parameter
+	call print_string 					;Call the print string function
 %endmacro
 
-main:							;Declare a label for the start of the program
-	Print HelloWorldString 		;Print the HelloWorldString using our Macro
-	cli							;Disable Interrupts
-	hlt							;Halt the Processor
+main:									;Declare a label for the start of the program
+	Print HelloWorldString 				;Print the HelloWorldString using our Macro
+	cli									;Disable Interrupts
+	hlt									;Halt the Processor
 	
 %include "Libraries/Print.asm"
 
