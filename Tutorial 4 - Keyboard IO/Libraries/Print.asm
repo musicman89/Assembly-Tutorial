@@ -19,7 +19,7 @@
 ;				void print_string(byte string_address);
 ;			Algorithm:
 ;				void print_string(byte string_address){
-;					while(*string_address != 0){
+;					while(string_address != 0){
 ;						print(*string_address);
 ;						string_address++;
 ;					}
@@ -75,3 +75,5 @@ print:
 	int 0x10					;Call the Video Interrupt
 	pop bx						;Pop the BX register back from the stack
 ret
+
+NewLine db 13,10,0
