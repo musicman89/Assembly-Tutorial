@@ -47,9 +47,11 @@ ret
 ;							print_string(newline);
 ;							return buffer;
 ;						}
-;						*buffer = key;
+;						if(key != 0x0e){
+;							*buffer = key;
+;							buffer++
+;						}
 ;						print(key);
-;						buffer++
 ;					}
 ;				}
 ;
@@ -70,11 +72,16 @@ get_user_input:
         cmp ah, 0x1c 					;Check if key is the enter key
         je .return  					;If it is return
 
+		cmp ah, 0x0e 					;Check if key is the enter key
+        je .back	  					;If it is return
+		
         mov [bx],al						;Set the current location in the sting buffer to the character in al
-        call print						;Print the character
-
-        inc bx 							;Increment the position in the string buffer
-        jmp .loop
+        inc bx 							;Increment the position in the string buffer 
+		
+		.back:
+		call print						;Print the character
+		
+		jmp .loop
     .return:
     mov byte [bx], 0 					;Null terminate the string	
     mov bx, NewLine						;Put the newline string in bx

@@ -19,13 +19,21 @@
 	call print_string 					;Call the print string function
 %endmacro
 
+%macro Input 1 							;Define a Input Function Macro 
+	Print %1  							;Display a message to the user
+	call get_user_input 				;Accept the user Input
+%endmacro
+
 main:									;Declare a label for the start of the program
-	Print HelloWorldString 				;Print the HelloWorldString using our Macro
+	Input InputString					;Ask the user for Input
+	call print_string 					;Print the user Input
+	Print NewLine 						;Go to a new line
+	jmp main 							;Repeat
 	cli									;Disable Interrupts
 	hlt									;Halt the Processor
 	
 %include "Libraries/Print.asm"
 %include "Libraries/KeyboardIO.asm"
 
-HelloWorldString db 'Hello World', 0	;Define the Hello World String
+InputString db 'Please Input a String and Press Enter: ', 0	;Define the Hello World String
 times 10240-($-$$) db 0

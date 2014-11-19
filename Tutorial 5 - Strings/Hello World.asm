@@ -19,14 +19,53 @@
 	call print_string 					;Call the print string function
 %endmacro
 
+%macro Input 1 							;Define a Input Function Macro 
+	Print %1  							;Display a message to the user
+	call get_user_input 				;Accept the user Input
+%endmacro
+
 main:									;Declare a label for the start of the program
-	Print HelloWorldString 				;Print the HelloWorldString using our Macro
+	Input InputString					;Ask the user for Input
+	call print_string 					;Print the user Input
+	push bx
+	Print NewLine 						;Go to a new line
+	pop bx
+	
+	call to_upper
+	call print_string 					;Print the user Input
+	push bx
+	Print NewLine 						;Go to a new line
+	pop bx
+	
+	call to_lower
+	call print_string 					;Print the user Input
+	push bx
+	Print NewLine 						;Go to a new line
+	pop bx
+	
+	mov cx, 0x05
+	call substr
+	call print_string 					;Print the user Input
+	push bx
+	Print NewLine 						;Go to a new line
+	pop bx
+	
+	mov cx, bx
+	mov dx, HelloString
+	call string_compare
+	cmp ax, 0
+	jnz main
+	
+	Print IsHello
+	
+	jmp main 							;Repeat
 	cli									;Disable Interrupts
 	hlt									;Halt the Processor
 	
 %include "Libraries/Print.asm"
 %include "Libraries/KeyboardIO.asm"
 %include "Libraries/StringFunctions.asm"
-
-HelloWorldString db 'Hello World', 0	;Define the Hello World String
+HelloString db 'hello'
+IsHello db 'You entered a string starting with Hello'
+InputString db 'Please Input a String and Press Enter: ', 0	;Define the Hello World String
 times 10240-($-$$) db 0

@@ -17,7 +17,7 @@
 ;				byte char_to_lower(byte character);
 ;			Algorithm: 
 ;				byte char_to_lower(byte character){
-;					if(character >= 'a'){
+;					if(character >= 'a' || character < 'A'){
 ;						return character;
 ;					}
 ;					else{
@@ -37,6 +37,10 @@
 char_to_lower:
     cmp al, 'a'
     jge .IsLower
+	
+	cmp al, 'A'
+	jl .IsLower
+	
     add al, 'a'-'A'
     .IsLower:
 ret
@@ -49,7 +53,7 @@ ret
 ;				byte char_to_upper(byte character);
 ;			Algorithm: 
 ;				byte char_to_upper(byte character){
-;					if(character <= 'Z'){
+;					if(character <= 'Z' || character < 'A'){
 ;						return character;
 ;					}
 ;					else{
@@ -69,6 +73,10 @@ ret
 char_to_upper:
     cmp al, 'Z'
     jle .IsUpper
+
+	cmp al, 'A'
+	jl .IsUpper
+	
     sub al, 'a'-'A'
     .IsUpper:
 ret
@@ -82,10 +90,7 @@ ret
 ;			Algorithm: 
 ;				word substr(byte string_address, int length){
 ;					byte buffer_address = StringBuffer;
-;					while(length > 0){
-;						if(*string_address == 0){
-;							break;
-;						}
+;					while(length > 0 && *string_address !=0){
 ;						*buffer_address = *string_address;
 ;						string_address++;
 ;						buffer_address++
@@ -96,40 +101,52 @@ ret
 ;	Entry:
 ;       string_address in register BX, length in register CX
 ;	Exit:
-;       The address of the substring in register BX
+;       The address of the sub-string in register BX
 ;	Uses:
-;		AX, BX, CX, DX
+;		AX, BX, CX, SI
 ;	Exceptions:
 ;		None
 ;*******************************************************************************
 substr:
-		mov dx, StringBuffer
-		and word [bx], 0x0000
-        test cx, cx
-        jz .done
-        .loop:
-			mov ax, [bx]
-			test al, al 
-			jz .done
-			
-			push bx
-			mov bx, dx
-			mov byte[bx], al
-			
-			test ah, ah
-			jz .done
-			
-			mov byte [bx+1], ah
-			pop bx
-			
-			add dx, 2
-			add bx, 2
-			dec cx
-			jnz .loop
-        .done:
-		inc dx
-		mov bx, dx
-		mov byte[bx], 0
+	mov si, StringBuffer
+	test cx, cx
+	jz .done
+	jp .loop
+	.single:
+		mov al, [bx]
+		test al, al 
+		jz .done
+		
+		mov byte[si], al
+
+		dec cx
+		cmp cx, 0
+		jle .done
+		
+		inc si
+		inc bx
+	.loop:
+		mov ax, [bx]
+		test al, al 
+		jz .done
+		
+		mov byte[si], al
+		
+		test ah, ah
+		jz .done
+		
+		mov byte[si+1], ah
+		
+		sub cx, 2
+		cmp cx, 0
+		jle .done
+		
+		add si, 2
+		add bx, 2
+		jmp .loop
+	.done:
+		inc si
+		mov byte[si], 0
 		mov bx, StringBuffer
         align   4
 ret
@@ -191,13 +208,13 @@ string_compare:
 
         .doneeq:
             xor     ax,ax	;clear ax
-            ret
+			ret
 
         align   8
         .donene:
             sbb     ax,ax	;clear all but the sign bit
             or      ax,1	;set the value to 1, ax will equal -1 if stringA < stringB and 1 if stringA > stringB
-            ret
+			ret
 
         align   16
 ret
@@ -243,7 +260,7 @@ to_lower:
 		test al, al 				;check for the end of the string
         jz .return
         
-		call char_to_lower al
+		call char_to_lower
         mov [bx + 1], al
 		
         add bx, 2 					;advance to the next characters
