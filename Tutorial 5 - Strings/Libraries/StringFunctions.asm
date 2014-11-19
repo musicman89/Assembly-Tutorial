@@ -88,10 +88,11 @@ ret
 ;			Prototype:
 ;				word substr(byte string_address, int length);
 ;			Algorithm: 
-;				word substr(byte string_address, int length){
-;					byte buffer_address = StringBuffer;
+;				word substr(byte* string_address, int length){
+;					byte* buffer_address = StringBuffer;
 ;					while(length > 0 && *string_address !=0){
 ;						*buffer_address = *string_address;
+;						length--;
 ;						string_address++;
 ;						buffer_address++
 ;					}
@@ -111,7 +112,6 @@ substr:
 	mov si, StringBuffer
 	test cx, cx
 	jz .done
-	jp .loop
 	.single:
 		mov al, [bx]
 		test al, al 
@@ -119,34 +119,13 @@ substr:
 		
 		mov byte[si], al
 
-		dec cx
-		cmp cx, 0
-		jle .done
-		
 		inc si
 		inc bx
-	.loop:
-		mov ax, [bx]
-		test al, al 
-		jz .done
-		
-		mov byte[si], al
-		
-		test ah, ah
-		jz .done
-		
-		mov byte[si+1], ah
-		
-		sub cx, 2
-		cmp cx, 0
-		jle .done
-		
-		add si, 2
-		add bx, 2
-		jmp .loop
+		dec cx
+		jnz .single
+
 	.done:
-		inc si
-		mov byte[si], 0
+		mov word [si], 0x0000
 		mov bx, StringBuffer
         align   4
 ret

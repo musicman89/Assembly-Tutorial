@@ -24,40 +24,49 @@
 	call get_user_input 				;Accept the user Input
 %endmacro
 
+%macro PrintNewLine 0 					;Define a Macro to move us to a new line
+	push bx 							;Push the current value of the BX register to the stack
+	Print NewLine 						;Go to a new line
+	pop bx 								;Pop the value of the BX register back from the stack
+%endmacro
+
+%macro PreservePrint 1  				;Define a Macro that allows us to print to the screen preserving the BX register
+	push bx 							;Push the current value of the BX register to the stack
+	Print %1 							;Print the address in the first parameter 
+	pop bx 								;Pop the value of the BX register back from the stack
+%endmacro
+
 main:									;Declare a label for the start of the program
 	Input InputString					;Ask the user for Input
+	PreservePrint OriginalString 		;Inform the user that this output is the original string
 	call print_string 					;Print the user Input
-	push bx
-	Print NewLine 						;Go to a new line
-	pop bx
+	PrintNewLine
 	
-	call to_upper
+	call to_upper 						;Convert the string to upper case
+	PreservePrint ToUpperString 		;Inform the user that this output is upper cased
 	call print_string 					;Print the user Input
-	push bx
-	Print NewLine 						;Go to a new line
-	pop bx
+	PrintNewLine
 	
-	call to_lower
+	call to_lower 						;Convert the string to lower case
+	PreservePrint ToLowerString 		;Inform the user that this output is lower cased
 	call print_string 					;Print the user Input
-	push bx
-	Print NewLine 						;Go to a new line
-	pop bx
+	PrintNewLine
 	
-	mov cx, 0x05
-	call substr
+	mov cx, 0x05 						;Set the length of the substring to5
+	call substr 						;Take a substring
+	PreservePrint SubStringString 		;Inform the user that this output is a substring
 	call print_string 					;Print the user Input
-	push bx
-	Print NewLine 						;Go to a new line
-	pop bx
+	PrintNewLine
 	
-	mov cx, bx
-	mov dx, HelloString
-	call string_compare
-	cmp ax, 0
-	jnz main
-	
-	Print IsHello
-	
+	mov cx, bx 							;Set stringA to the value of register BX
+	mov dx, HelloString 				;Set stringB to our HelloString
+	call string_compare 				;Compare stringA and stringB
+	test ax, ax 						;Test if they were equal
+	jnz main 							;If they were not equal repeat
+
+	Print IsHello 						;If they were equal let us know
+	PrintNewLine
+
 	jmp main 							;Repeat
 	cli									;Disable Interrupts
 	hlt									;Halt the Processor
@@ -65,7 +74,12 @@ main:									;Declare a label for the start of the program
 %include "Libraries/Print.asm"
 %include "Libraries/KeyboardIO.asm"
 %include "Libraries/StringFunctions.asm"
-HelloString db 'hello'
-IsHello db 'You entered a string starting with Hello'
+
+HelloString db 'hello', 0
+IsHello db 'You entered a string starting with Hello', 0
+OriginalString db 'Original: ', 0
+ToUpperString db 'To Upper: ', 0
+ToLowerString db 'To Lower: ', 0
+SubStringString db 'Substring: ', 0
 InputString db 'Please Input a String and Press Enter: ', 0	;Define the Hello World String
 times 10240-($-$$) db 0
