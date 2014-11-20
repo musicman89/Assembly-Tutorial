@@ -37,6 +37,10 @@
 main:									;Declare a label for the start of the program
 	call clear_screen
 
+	mov bx, 0x1234						;Set the value in the BX register to print
+	call print_hex						;Print our value to the screen
+	PrintNewLine
+	
 	Input InputString					;Ask the user for Input
 	PreservePrint OriginalString 		;Inform the user that this output is the original string
 	call print_string 					;Print the user Input

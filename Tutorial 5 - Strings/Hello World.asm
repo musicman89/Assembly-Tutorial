@@ -52,7 +52,7 @@ main:									;Declare a label for the start of the program
 	call print_string 					;Print the user Input
 	PrintNewLine
 	
-	mov cx, 0x05 						;Set the length of the substring to5
+	mov cx, 0x05 						;Set the length of the substring to 5
 	call substr 						;Take a substring
 	PreservePrint SubStringString 		;Inform the user that this output is a substring
 	call print_string 					;Print the user Input
