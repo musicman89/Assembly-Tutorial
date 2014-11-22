@@ -17,7 +17,7 @@
 ;				byte char_to_lower(byte character);
 ;			Algorithm: 
 ;				byte char_to_lower(byte character){
-;					if(character >= 'a' || character < 'A'){
+;					if(character > 'Z' || character < 'A'){
 ;						return character;
 ;					}
 ;					else{
@@ -35,8 +35,8 @@
 ;		input not a character
 ;*******************************************************************************
 char_to_lower:
-    cmp al, 'a'
-    jge .IsLower
+    cmp al, 'Z'
+    jg .IsLower
 	
 	cmp al, 'A'
 	jl .IsLower
@@ -53,7 +53,7 @@ ret
 ;				byte char_to_upper(byte character);
 ;			Algorithm: 
 ;				byte char_to_upper(byte character){
-;					if(character <= 'Z' || character < 'A'){
+;					if(character < 'a' || character > 'z'){
 ;						return character;
 ;					}
 ;					else{
@@ -71,11 +71,11 @@ ret
 ;		input not a character
 ;*******************************************************************************
 char_to_upper:
-    cmp al, 'Z'
-    jle .IsUpper
+    cmp al, 'a'
+    jl .IsUpper
 
-	cmp al, 'A'
-	jl .IsUpper
+	cmp al, 'z'
+	jg .IsUpper
 	
     sub al, 'a'-'A'
     .IsUpper:
