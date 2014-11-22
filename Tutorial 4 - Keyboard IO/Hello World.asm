@@ -36,4 +36,4 @@ main:									;Declare a label for the start of the program
 %include "Libraries/KeyboardIO.asm"
 
 InputString db 'Please Input a String and Press Enter: ', 0	;Define the Hello World String
-times 10240-($-$$) db 0
+times 4608-($-$$) db 0

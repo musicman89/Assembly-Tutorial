@@ -82,4 +82,4 @@ ToUpperString db 'To Upper: ', 0
 ToLowerString db 'To Lower: ', 0
 SubStringString db 'Substring: ', 0
 InputString db 'Please Input a String and Press Enter: ', 0	;Define the Hello World String
-times 10240-($-$$) db 0
+times 4608-($-$$) db 0

@@ -18,7 +18,7 @@ main:									;Declare a label for the start of the program
 	mov ds, ax							;clear ds
 	mov ss, ax							;start the stack at 0
 	mov bp, 0x8000						;move the stack pointer to 0x2000 past the start yet 0x1000 before where we will load the remainder of our program
-	mov sp, bp 							;since we cannot directly set the address of the stack pointer we push it through the base pointer
+	mov sp, bp 							;since we cannot directly set the address of the stack pointer we push it using the base pointer
 
 	mov bx, 0x9000 						;Set the address we will load the code into
 	mov dh, 9 							;Set the number of sectors to load

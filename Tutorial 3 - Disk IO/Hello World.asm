@@ -27,4 +27,4 @@ main:									;Declare a label for the start of the program
 %include "Libraries/Print.asm"
 
 HelloWorldString db 'Hello World', 0	;Define the Hello World String
-times 10240-($-$$) db 0
+times 4608-($-$$) db 0
